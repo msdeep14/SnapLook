@@ -2,6 +2,7 @@ from django.shortcuts import render
 from TwitterAPI import TwitterAPI
 from Post.models import Album, User
 import calendar
+import collections
 
 # Create your views here.
 
@@ -13,8 +14,14 @@ access_token_secret = ''
 api = TwitterAPI(consumer_key, consumer_secret, access_token, access_token_secret)
 
 def newsfeed(request):
-    r = api.request('search/tweets', {'q':' #shirleyshetia', 'filter':'images'})
-    rv = api.request('search/tweets',{'q':'#hello', 'filter' : 'videos'})
+    # print("request:: ",request)
+    hashtag_string = '#shirleyTravels'
+    if(request.GET.get('mybtn')):
+        hashtag_string = str(request.GET.get('hashtag'))
+        print("HashtagString :: ",hashtag_string)
+
+    r = api.request('search/tweets', {'q':hashtag_string, 'filter':'images'})
+    # rv = api.request('search/tweets',{'q':'#hello', 'filter' : 'videos'})
 
     # for item in rv:
     #     print(item)
@@ -72,7 +79,7 @@ def newsfeed(request):
     for url in url_list_in_database:
         temp.append(str(url['image_url']))
 
-    # check if there are new urls in the list by taking intersection with
+    # check if there are new urls in the list by taking difference with
     # previously stored urls
     url_list_in_database = temp
     new_urls = list(set(url_list) - set(url_list_in_database))
@@ -99,3 +106,12 @@ def newsfeed(request):
 
     total_entries_in_database = len(url_list)
     return render(request, 'Post/newsfeed.html', {'url_list': url_list})
+
+
+
+def request_page(request):
+    print("hello")
+    if(request.GET.get('mybtn')):
+        print("string :: ",str(request.GET.get('hashtag')))
+        newsfeed( str(request.GET.get('hashtag')) )
+    return render(request,'Post/newsfeed.html')
