@@ -1,0 +1,12 @@
+Metadata-Version: 1.1
+Name: TwitterAPI
+Version: 2.4.6
+Summary: Minimal wrapper for Twitter's REST and Streaming APIs
+Home-page: https://github.com/geduldig/TwitterAPI
+Author: geduldig
+Author-email: boxnumber03@gmail.com
+License: MIT
+Download-URL: https://github.com/geduldig/TwitterAPI/tarball/master
+Description: UNKNOWN
+Keywords: twitter
+Platform: UNKNOWN
