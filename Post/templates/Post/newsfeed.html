@@ -5,15 +5,15 @@
 <link href="http://cdn.alloyui.com/3.0.1/aui-css/css/bootstrap.min.css" rel="stylesheet"></link>
 	{% for image_url, extra_data in url_list.items %}
 		<div id="myGallery">
-		<div class="img">
-		  <a target="_blank" href="{{ image_url }}">
-		    <img src="{{ image_url }}" width="300" height="300">
-		  </a>
-		  <div class="date">{{ extra_data.0}}, ({{ extra_data.1 }} retweets)</div>
+    <div class="images">
+    <a  href="{{ image_url }}">
+      <img src="{{ image_url }}" width="800" height="300" border="0" alt=""></a>
+    <div class="date">{{ extra_data.0}}, ({{ extra_data.1 }} retweets), ({{extra_data.2}} likes)</div>
+    </div>
 		</div>
-		</div>
+
 	{% endfor %}
-  
+
 <script>
 YUI().use(
   'aui-image-viewer',

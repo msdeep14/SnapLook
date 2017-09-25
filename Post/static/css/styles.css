@@ -49,21 +49,6 @@ h1, h2, h3, h4, h4 a {
     color: #000000;
 }
 
-div.img {
-    margin: 5px;
-    border: 1px solid #ccc;
-    float: left;
-    width: 180px;
-}
-
-div.img:hover {
-    border: 1px solid #777;
-}
-
-div.img img {
-    width: 100%;
-    height: auto;
-}
 
 div.desc {
     padding: 15px;
@@ -72,4 +57,13 @@ div.desc {
 
 .date {
     font-weight: bold;
+}
+
+.images {
+    text-align : center;
+}
+.images img {
+    width  : 200px;
+    height : 200x;
+    margin : 10px;
 }

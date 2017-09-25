@@ -13,9 +13,12 @@ access_token_secret = ''
 api = TwitterAPI(consumer_key, consumer_secret, access_token, access_token_secret)
 
 def newsfeed(request):
-    r = api.request('search/tweets', {'q':' #katrinakaif', 'filter':'images'})
-    # for item in r:
+    r = api.request('search/tweets', {'q':' #shirleyshetia', 'filter':'images'})
+    rv = api.request('search/tweets',{'q':'#hello', 'filter' : 'videos'})
+
+    # for item in rv:
     #     print(item)
+    #     print('\n\n')
 
     # 'media_url_https': 'https://pbs.twimg.com/media/DKesMqrVwAAwfby.jpg'
     url_list = []
