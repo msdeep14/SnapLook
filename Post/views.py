@@ -2,7 +2,6 @@ from django.shortcuts import render
 from TwitterAPI import TwitterAPI
 from Post.models import Album, User
 import calendar
-import collections
 
 # Create your views here.
 
@@ -15,8 +14,6 @@ api = TwitterAPI(consumer_key, consumer_secret, access_token, access_token_secre
 
 def newsfeed(request):
     # print("request:: ",request)
-
-
     hashtag_string = '#katrinakaif'
     hashtag_string = hashtag_string.lower()
     if(request.GET.get('mybtn')):
@@ -43,7 +40,7 @@ def newsfeed(request):
             url_list[str(entry['image_url'])] = (dt, str(entry['retweet_count']),str(entry['like_count']))
         return render(request, 'Post/newsfeed.html', {'url_list': url_list})
 
-
+    # get the images of particular hashtag
     else:
         url_list = []
         retweet_count_list = []
