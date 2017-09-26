@@ -14,11 +14,12 @@
 
 	{% for image_url, extra_data in url_list.items %}
 		<div id="myGallery">
-    <div class="images">
+			<div class="images">
     <a  href="{{ image_url }}">
-      <img src="{{ image_url }}" width="800" height="300" border="0" alt=""></a>
+      <img src="{{ image_url }}" width="300" height="300" border="0" alt=""></a>
     <div class="date">{{ extra_data.0}}, ({{ extra_data.1 }} retweets), ({{extra_data.2}} likes)</div>
     </div>
+
 		</div>
 
 	{% endfor %}
