@@ -5,10 +5,10 @@ import calendar
 
 # Create your views here.
 
-consumer_key = ''
-consumer_secret = ''
-access_token = ''
-access_token_secret = ''
+consumer_key = 'Z5LbFe2QEvoNJEzbIN3MmKxn9'
+consumer_secret = 'XYp9XwkwSfVM1DfT4yC5DOyuAbnHmrklxNSddjkuiMHE1gzhrN'
+access_token = '2790335994-I04hVFI6U7x04UnpxKKGLJSSrgzBxWTMMjC1iFc'
+access_token_secret = 'q0Nu7pkdopaCGahwo4V51C6qZOKSU9fQPILf1jCSA9WO5'
 
 api = TwitterAPI(consumer_key, consumer_secret, access_token, access_token_secret)
 
@@ -96,7 +96,6 @@ def newsfeed(request):
             me = User.objects.get(username='msdeep14')
             Album.objects.filter(user = me).values('image_url')
 
-            delete all enteries - Album.objects.all().delete()
             # it will give you all the image urls in database
         '''
 
