@@ -2,6 +2,7 @@ from django.shortcuts import render
 from TwitterAPI import TwitterAPI
 from Post.models import Album, User
 import calendar
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -11,6 +12,8 @@ access_token = ''
 access_token_secret = ''
 
 api = TwitterAPI(consumer_key, consumer_secret, access_token, access_token_secret)
+
+me = User.objects.get(username='msdeep14')
 
 def newsfeed(request):
     # print("request:: ",request)
@@ -30,8 +33,8 @@ def newsfeed(request):
         url_favorite_dict = {}
         favorite_count_list = []
 
-        url_list_in_database = Album.objects.all().filter(user = request.user).values('image_url')
-        temp = Album.objects.all().filter(user = request.user).values('image_url', 'date', 'retweet_count','like_count')
+        url_list_in_database = Album.objects.all().filter(user = me).values('image_url')
+        temp = Album.objects.all().filter(user = me).values('image_url', 'date', 'retweet_count','like_count')
 
         url_list = {}
         for entry in temp:
@@ -99,7 +102,7 @@ def newsfeed(request):
             # it will give you all the image urls in database
         '''
 
-        url_list_in_database = Album.objects.all().filter(user = request.user, hashtag = hashtag_string).values('image_url')
+        url_list_in_database = Album.objects.all().filter(user = me, hashtag = hashtag_string).values('image_url')
 
         # for url in url_list:
         #     print(url)
@@ -115,10 +118,10 @@ def newsfeed(request):
 
         # if there are new urls, save them into database
         for url in new_urls:
-            album = Album(hashtag = hashtag_string, image_url = url, user = request.user, retweet_count = url_retweet_dict[url], like_count = url_favorite_dict[url])
+            album = Album(hashtag = hashtag_string, image_url = url, user = me, retweet_count = url_retweet_dict[url], like_count = url_favorite_dict[url])
             album.save()
 
-        temp = Album.objects.all().filter(user = request.user, hashtag = hashtag_string).values('image_url', 'date', 'retweet_count','like_count')
+        temp = Album.objects.all().filter(user = me, hashtag = hashtag_string).values('image_url', 'date', 'retweet_count','like_count')
 
 
         '''
