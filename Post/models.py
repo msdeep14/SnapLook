@@ -9,6 +9,7 @@ class Album(models.Model):
     date = models.DateTimeField(default = timezone.now())
     retweet_count = models.IntegerField(default = 0)
     like_count = models.IntegerField(default = 0)
+    emotion = models.CharField(max_length = 50, default = 'happiness')
     hashtag = models.CharField(max_length = 200, default = '#ShirleyTravels')
 
     def __str__(self):

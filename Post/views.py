@@ -3,9 +3,22 @@ from TwitterAPI import TwitterAPI
 from Post.models import Album, User
 import calendar
 from django.contrib.auth.models import User
+import requests
 
-# Create your views here.
+import http.client, urllib.request, urllib.parse, urllib.error, base64, sys
+import simplejson as json
 
+# MICROSOFT EMOTION API
+subscription_key = ''
+
+headers = {
+    'Content-Type': 'application/json',
+    'Ocp-Apim-Subscription-Key': subscription_key,
+}
+params = urllib.parse.urlencode({
+})
+
+# twitter access tokens
 consumer_key = ''
 consumer_secret = ''
 access_token = ''
@@ -15,6 +28,35 @@ api = TwitterAPI(consumer_key, consumer_secret, access_token, access_token_secre
 
 me = User.objects.get(username='msdeep14')
 
+# get the emotion of image
+def get_emotion(url):
+    b = { 'url': url}
+    body = str(b)
+    # print (url)
+    try:
+        conn = http.client.HTTPSConnection('westus.api.cognitive.microsoft.com')
+        conn.request("POST", "/emotion/v1.0/recognize?%s" % params, body, headers)
+        response = conn.getresponse()
+        data = response.read()
+        # 'data' contains the JSON data. The following formats the JSON data for display.
+        parsed = json.loads(data)
+        # print ("Response:")
+        # print (json.dumps(parsed, sort_keys=True, indent=2))
+        conn.close()
+
+        # get the most powerful emotion, with maximum value
+        if(parsed[0] is not NULL):
+            scores = parsed[0]["scored"]
+            max_emotion = max(scores, key = scores.get)
+            return max_emotion
+        else:
+            return "happiness"
+
+    except Exception as e:
+        # print(e.args)
+        return "happiness"
+
+
 def newsfeed(request):
     # print("request:: ",request)
     hashtag_string = '#katrinakaif'
@@ -23,7 +65,7 @@ def newsfeed(request):
         hashtag_string = str(request.GET.get('hashtag'))
         print("HashtagString :: ",hashtag_string)
 
-    # display all images in database if
+    # display all images stored in database if
     # searched keyword is '#msdeep14'
 
     if hashtag_string == '#msdeep14':
@@ -49,6 +91,7 @@ def newsfeed(request):
         retweet_count_list = []
         url_retweet_dict = {}
         url_favorite_dict = {}
+        url_emotion_dict = {}
         favorite_count_list = []
         r = api.request('search/tweets', {'q':hashtag_string, 'filter':'images','count' : 1000})
         # rv = api.request('search/tweets',{'q':'#hello', 'filter' : 'videos'})
@@ -91,6 +134,19 @@ def newsfeed(request):
             url_retweet_dict[url_list[i]] = retweet_count_list[i]
             url_favorite_dict[url_list[i]] = favorite_count_list[i]
 
+        # emotion requests are limited to 20 because you can make only
+        # 20 requests per minute to microsoft API, and total of
+        # 30,000 requests in one month in free subscription
+
+        # other than 20 requests, default emotion is set to "happiness"
+        for i in range(0,size):
+            if (i < 20):
+                url_emotion_dict[url_list[i]] = get_emotion(url_list[i])
+                # print(url_emotion_dict[url_list[i]])
+            else:
+                url_emotion_dict[url_list[i]] = "happiness"
+                # print(url_emotion_dict[url_list[i]])
+
         '''
             from Post.models import Album
             from django.contrib.auth.models import User
@@ -98,8 +154,9 @@ def newsfeed(request):
             <QuerySet [<User: msdeep14>]>
             me = User.objects.get(username='msdeep14')
             Album.objects.filter(user = me).values('image_url')
-
             # it will give you all the image urls in database
+
+            User.objects.get(username='msdeep14').delete()
         '''
 
         url_list_in_database = Album.objects.all().filter(user = me, hashtag = hashtag_string).values('image_url')
@@ -118,10 +175,10 @@ def newsfeed(request):
 
         # if there are new urls, save them into database
         for url in new_urls:
-            album = Album(hashtag = hashtag_string, image_url = url, user = me, retweet_count = url_retweet_dict[url], like_count = url_favorite_dict[url])
+            album = Album(hashtag = hashtag_string, image_url = url, user = me, retweet_count = url_retweet_dict[url], like_count = url_favorite_dict[url], emotion = url_emotion_dict[url])
             album.save()
 
-        temp = Album.objects.all().filter(user = me, hashtag = hashtag_string).values('image_url', 'date', 'retweet_count','like_count')
+        temp = Album.objects.all().filter(user = me, hashtag = hashtag_string).values('image_url', 'date', 'retweet_count','like_count','emotion')
 
 
         '''
@@ -132,7 +189,7 @@ def newsfeed(request):
         for entry in temp:
             dt = str(entry['date'])[0:10]
             dt = calendar.month_name[int(dt[5:7])] + " " + dt[8:10] + ", " + dt[0:4]
-            url_dict[str(entry['image_url'])] = (dt, str(entry['retweet_count']),str(entry['like_count']))
+            url_dict[str(entry['image_url'])] = (dt, str(entry['retweet_count']),str(entry['like_count']),str(entry['emotion']))
 
         return render(request, 'Post/newsfeed.html', {'url_list': url_dict})
 
