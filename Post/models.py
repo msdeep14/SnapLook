@@ -10,7 +10,7 @@ class Album(models.Model):
     retweet_count = models.IntegerField(default = 0)
     like_count = models.IntegerField(default = 0)
     emotion = models.CharField(max_length = 50, default = 'happiness')
-    hashtag = models.CharField(max_length = 200, default = '#ShirleyTravels')
+    hashtag = models.CharField(max_length = 200, default = '#katrinakaif')
 
     def __str__(self):
         return self.user.username
