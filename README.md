@@ -15,3 +15,7 @@ application developed in django(python) which extracts images of specific hashta
 After completing the setup, enter a string for example `#hashtag` to get the images, initial hashtag is set to `#katrinakaif`
 
 You can get all the images you searched by using hashtag keyword as `#msdeep14`
+
+### initial code references : 
+
+[Photo Gallery Web Application](https://github.com/amangoeliitb/Photo-Gallery-Web-Application)
